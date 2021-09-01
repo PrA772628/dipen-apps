@@ -1,0 +1,1 @@
+from . import manufacture_subcontract

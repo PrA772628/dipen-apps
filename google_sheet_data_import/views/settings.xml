@@ -34,7 +34,7 @@
                         <div class="o_setting_left_pane">
                             <ol>
                                 <li>
-                                    <p>In the Cloud Console, go to the <strong>Service Accounts</strong> page. <a role="button" class="btn btn-link" href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_new">Go to Service accounts</a>
+                                    <p>In the Cloud Console, go to the <strong>Service Accounts</strong> page. <a class="btn btn-link" role='button' href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_new">Go to Service accounts</a>
                                     </p>
                                 </li>
                                 <li>
@@ -72,7 +72,7 @@
                         <div class="o_setting_right_pane">
                             <hr/>
                             <h3 class="pull-right"> 
-                                For More Help. Please visit at <a role="button" href="https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys" id="action_create_service_acc_key" class="btn btn-link" target="_new">
+                                For More Help. Please visit at <a role='button' href="https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys" id="action_create_service_acc_key" class="btn btn-link" target="_new">
                                 <h3 style="margin-top: 5px;">Creating service account keys</h3>
                             </a>
                              </h3>

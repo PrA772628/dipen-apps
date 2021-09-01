@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="subcontracting_workorder.mrp_routing_workcenter_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.form.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//page[last()]" position="after">
+                <field name='show_wo_subcontract' invisible='True'/>
+                <page string="Subcontracting" attrs="{'invisible': [('show_wo_subcontract','=',False)]}">
+                    <group>
+                        <group col="3">
+                            <field name='subcontract' string='Subcontract?'/>
+                        </group>
+                        <group col="3">
+                            <field name='subcontract_without_bom' string='Subcontract without BOM?' attrs="{'invisible': [('subcontract', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <separator string="Configuration" attrs="{'invisible': [('subcontract', '=', False)]}"/>
+                    <group attrs="{'invisible': [('subcontract', '=', False)]}">
+                        <group>
+                            <field name='service_product' domain="[('type', '=', 'service')]" attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                            <field name='cost_per_unit' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name='partner_id' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                            <field name='bom_id' widget='selection' 
+                                attrs="{'invisible': ['|', '&amp;', ('subcontract', '=', False), ('subcontract_without_bom', 'in', [False,True]), '&amp;', ('subcontract', '=', True), ('subcontract_without_bom', '=', True)], 'required': [('subcontract', '=', True), ('subcontract_without_bom', '=', False)]}"/>     
+                        </group>
+                        <field name="picking_ids" attrs="{'invisible': ['|', '&amp;', ('subcontract', '=', False), ('subcontract_without_bom', 'in', [False]), '&amp;', ('subcontract', '=', True), ('subcontract_without_bom', '=', False)] }">
+                            <tree editable="bottom">
+                                <field name="picking_type" string='Picking Type' required='1'/>
+                                <field name="product_id" string='Product' required='1'/>
+                                <field name="product_qty" string='Quantity' required='1'/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_workcenter_form_view_inherit2" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.form.view.inherit2</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority" eval="40"/>
+        <field name="inherit_id" ref="subcontracting_workorder.mrp_production_workcenter_form_view_inherit1"/>
+        <field name="arch" type="xml">  
+            <field name='subcontract_wo' position="after">
+                <field name='is_subcontract_without_bom' invisible="True"/>
+            </field>
+            <xpath expr="//page//group//group//field[@name='bom_id']" position="replace">
+                <field name='bom_id' readonly='True' attrs="{'invisible': ['|',('subcontract_wo', '=', False),('is_subcontract_without_bom', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']/button[3]" position="attributes">
+                <attribute name="attrs">{'invisible':['|','|',('subcontract_wo', '=', False),('is_subcontract_without_bom', '=', False),('state', 'not in', ['progress', 'done'])]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']/button[4]" position="attributes">
+                <attribute name="attrs">{'invisible':['|','|',('subcontract_wo', '=', False),('is_subcontract_without_bom', '=', False),('state', 'not in', ['progress', 'done'])]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

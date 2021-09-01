@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_bom_form_view_inherit1" model="ir.ui.view">
+        <field name="name">mrp.bom.form_inherit1</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="subcontracting.mrp_bom_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//group//div//field[@name='product_qty']" position="after">
+                <field name='show_bom_subcontract' invisible='True'/>
+            </xpath>
+            <xpath expr="//page[last()]" position="attributes">
+                <attribute name="attrs">{'invisible':[('show_bom_subcontract', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="mrp_routing_workcenter_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.form.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//page[last()]" position="after">
+                <field name='show_wo_subcontract' invisible='True'/>
+                <page string="Subcontracting" attrs="{'invisible': [('show_wo_subcontract','=',False)]}">
+                    <group colspan='4' cols='4'>
+                        <field name='subcontract' string='Subcontract?'/>
+                        <field name='bom_id' widget='selection' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>         
+                        <field name='partner_id' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                        <field name='service_product' domain="[('type', '=', 'service')]" attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                        <field name='cost_per_unit' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="mrp_routing_workcenter_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.tree.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='workcenter_id']" position="after">
+                <field name='show_wo_subcontract' invisible='True'/>
+                <field name="subcontract" string='Subcontract?' attrs="{'invisible': [('show_wo_subcontract','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.subcontract</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="40"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='work_order']" position="after">
+                <div class="col-md-6 col-xs-12 o_setting_box" id="subcontract_by_wo" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="subcontract_by_wo"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="subcontract_by_wo" string="Subcontract WorkOrders"/>
+                        <div class="text-muted">
+                            Apply Subcontracting On Work Order
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_subcontract_wo_purchase">
+        <field name="context">{}</field>
+        <field name="domain">[('workorder_id','=', active_id)]</field>
+        <field name="name">Purchases</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_id" ref="purchase.purchase_order_tree"/>
+    </record> 
+
+    <record model="ir.actions.act_window" id="action_subcontract_wo_delivery">
+        <field name="context">{}</field>
+        <field name="domain">[('workorder_id','=', active_id),('picking_type_code','=', 'outgoing')]</field>
+        <field name="name">Deliveries</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_id" ref="stock.vpicktree"/>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_subcontract_wo_receipt">
+        <field name="context">{}</field>
+        <field name="domain">[('workorder_id','=', active_id),('picking_type_code','=', 'incoming')]</field>
+        <field name="name">Receipts</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_id" ref="stock.vpicktree"/>
+    </record>
+
+    <record id="mrp_production_workcenter_form_view_inherit1" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.form.view.inherit1</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority" eval="40"/>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">  
+            <xpath expr="//sheet//div[@name='button_box']" position='inside'>
+                <field name='subcontract_wo' invisible="True"/>
+                <button type="action"
+                    name= "%(subcontracting_workorder.action_subcontract_wo_purchase)d"
+                    attrs="{'invisible':['|',('subcontract_wo', '=', False),('state', 'not in', ['progress', 'done'])]}"
+                    class="oe_stat_button" icon="fa-shopping-cart">
+                    <field string="Subcontracts" name="purchase_count" widget="statinfo"/>
+                    
+                </button>
+
+                <button type="action"
+                    name= "%(subcontracting_workorder.action_subcontract_wo_delivery)d"
+                    attrs="{'invisible':['|',('subcontract_wo', '=', False),('state', 'not in', ['progress', 'done'])]}"
+                    class="oe_stat_button" icon="fa-truck">
+                    <field string="Raw Materials" name="delivery_count" widget="statinfo"/> 
+                </button>
+
+                <button type="action"
+                    name= "%(subcontracting_workorder.action_subcontract_wo_receipt)d"
+                    attrs="{'invisible':['|',('subcontract_wo', '=', False),('state', 'not in', ['progress', 'done'])]}"
+                    class="oe_stat_button" icon="fa-truck">
+                    <field string="Receipts" name="receipt_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook//page[2]" position="attributes">
+                <attribute name="attrs">{'invisible':[('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//notebook//page[3]" position="attributes">
+                <attribute name="attrs">{'invisible':[('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group//group//field[@name='is_produced']" position="attributes">
+                <attribute name="attrs">{'invisible':[('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[@name='button_pending']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|',('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[6]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|',('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending'),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready'),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[8]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|','|', ('working_state', '=', 'blocked'), ('is_user_working', '=', True), ('state', 'in', ('done', 'pending', 'ready', 'cancel')),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//header//button[9]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|','|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done'),('subcontract_wo', '=', True)]}</attribute>
+            </xpath>
+            
+            <xpath expr="//page//group//group//field[@name='production_id']" position="after">
+                <field name='bom_id' readonly='True' attrs="{'invisible': [('subcontract_wo', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//header//button[@name='button_finish']" position="after">
+                <button name="btn_start_subcontract" type="object" string="Subcontract WorkOrder" attrs="{'invisible': ['|','|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending'),('subcontract_wo', '=', False)]}"/>
+                <button name="btn_start_subcontract" type="object" string="Subcontract WorkOrder" attrs="{'invisible': ['|','|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready'),('subcontract_wo', '=', False)]}" class="btn-success"/>
+                <field name="got_subcontracted_product" invisible="1"/>
+                <button name="btn_done_subcontract" type="object" string="Done" class="btn-success" attrs="{'invisible': ['|','|', ('got_subcontracted_product', '=', False), ('state', '!=', 'progress'),('subcontract_wo', '=', False)]}" />
+            </xpath>
+            <xpath expr="//header//button[@name='record_production']" position="replace">
+                <button name="record_production" type="object" string="Done" class="btn-success" attrs="{'invisible': ['|', '|', '|','|', ('is_produced', '=', True), ('working_state', '=', 'blocked'), ('state', '!=', 'progress'), ('is_user_working', '=', False), ('subcontract_wo', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

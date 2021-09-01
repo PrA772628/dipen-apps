@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_user_material_cost_detail,material.cost.detail,model_material_cost_detail,group_costing_user,1,1,1,0
+access_user_labour_cost_detail,labour.cost.detail,model_labour_cost_detail,group_costing_user,1,1,1,0
+access_user_overhead_cost_detail,overhead.cost.detail,model_overhead_cost_detail,group_costing_user,1,1,1,0
+access_user_labour_cost,labour.cost,model_labour_cost,group_costing_user,1,1,1,0
+access_user_overhead,overhead,model_overhead,group_costing_user,1,1,1,0
+access_material_cost_detail,material.cost.detail,model_material_cost_detail,,1,0,0,0
+access_labour_cost_detail,labour.cost.detail,model_labour_cost_detail,,1,0,0,0
+access_overhead_cost_detail,overhead.cost.detail,model_overhead_cost_detail,,1,0,0,0
+access_labour_cost,labour.cost,model_labour_cost,,1,0,0,0
+access_overhead,overhead,model_overhead,,1,0,0,0
+access_manager_material_cost_detail,material.cost.detail,model_material_cost_detail,group_costing_manager,1,1,1,1
+access_manager_labour_cost_detail,labour.cost.detail,model_labour_cost_detail,group_costing_manager,1,1,1,1
+access_manager_overhead_cost_detail,overhead.cost.detail,model_overhead_cost_detail,group_costing_manager,1,1,1,1
+access_manager_labour_cost,labour.cost,model_labour_cost,group_costing_manager,1,1,1,1
+access_manager_overhead,overhead,model_overhead,group_costing_manager,1,1,1,1

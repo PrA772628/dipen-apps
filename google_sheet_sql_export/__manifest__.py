@@ -1,6 +1,6 @@
 {
     "name": "Google Sheet SQL Export",
-    "version": "12.0.1.0.0",
+    "version": "13.0.1.0.0",
     "category": "Extra Tools",
     "author": "VperfectCS",
     "website": "http://vperfectcs.com/",

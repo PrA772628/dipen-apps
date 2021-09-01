@@ -1,6 +1,6 @@
 {
     'name': 'Google Sheet Import API',
-    'version': '12.0.1.1.0',
+    'version': '13.0.1.1.0',
     'category': 'Extra Tools',
     'author' : 'VperfectCS',
     'website' : 'http://vperfectcs.com/',
@@ -16,18 +16,13 @@ The module adds the possibility to import data and create fields from Google Spr
 6. New Field creation can support 'integer', 'float', 'char', 'text', 'date', 'datetime', 'boolean' types of fields
 """,
     'support': 'info@vperfectcs.com',
-    'depends': [
-        'base', 
-        'bus',
-    ],
+    'depends': ['base'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/google_sheet_data.xml',
         'views/google_spreadsheet_views.xml',
         'views/settings.xml',
-        'views/web_notify.xml'
-        
     ],
     'external_dependencies' : {
         'python' : [

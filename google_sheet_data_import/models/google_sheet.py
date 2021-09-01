@@ -1,8 +1,8 @@
 import base64
 import json
-import gspread
-from datetime import date
 from datetime import datetime
+from datetime import date
+import gspread
 from httplib2 import ServerNotFoundError
 from gspread.exceptions import NoValidUrlKeyFound, SpreadsheetNotFound
 from oauth2client.service_account import ServiceAccountCredentials
@@ -194,9 +194,17 @@ class GoogleSpreadsheetImport(models.Model):
         return True
 
     def show_notification(self):
-        self.env.user.notify_info(
-            message=_('Google sheet data is successfully imported to Odoo.'),
-            title=_('Imported Successfully'))
+        notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Imported Successfully'),
+                'message': _('Google sheet data is successfully imported to Odoo.'),
+                'type': 'success',  # types: success,warning,danger,info
+                'sticky': False,  # True/False will display for few seconds if false
+            },
+        }
+        return notification
 
     def run_single_record(self):
         self.ensure_one()
@@ -207,10 +215,11 @@ class GoogleSpreadsheetImport(models.Model):
         document = self.open_document(email, p12_json_key)
         sheet = document.worksheet(self.document_sheet)
         header_row = 1
-        row = [c or '' for c in sheet.row_values(header_row)]
-        if not row:
-            raise ValidationError(SHEET_APP, _(
-                'Header cells seems empty!'))
+        try:
+            row = [c or '' for c in sheet.row_values(header_row)]
+        except Exception as e:
+            raise ValidationError(_('%s\nHeader cells seems empty!'%SHEET_APP))
+
         master_row_field = row[0]
 
         GoogleModel = self.env['ir.model'].search([
