@@ -1,6 +1,6 @@
 {
     'name': 'MRP Costing',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'VPerfectCS',
     'category': 'Tools',
     'category':"""
@@ -10,10 +10,9 @@
         'mrp','account','hr','hr_timesheet',
     ],
     'data': [
-        "security/security.xml",
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/product_cost.xml',
-        'data/seq.xml',
     ],
     "images": ["static/description/banner.gif"],
     'installable': True,

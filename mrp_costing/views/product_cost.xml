@@ -114,7 +114,6 @@
         <field name="model">labour.cost</field>
         <field name="arch" type="xml">
             <tree>
-                <!-- <field name="name_seq"/> -->
                 <field name="cost_type"/>
                 <field name="product_id"/>
                 <field name="quantity"/>
@@ -299,5 +298,6 @@
 
     <menuitem id="overhead_cost" name="Overhead Cost" parent="over" action='overhead_cost_action' sequence="100"/>
 
+    <!-- <menuitem id="overhead_new" name="OverHeads" parent="overhead" action='overhead_action' sequence="50"/> -->
 </odoo>
 

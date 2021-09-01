@@ -5,7 +5,7 @@
     'name': 'Excel Spreadsheet Import',
     'category': 'Extra Tools',
     'summary': "Excel or CSV Import to any Model with respect to update or Create Data or create fields",
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'VperfectCS',
     'website': 'http://www.vperfectcs.com',
     'description': """

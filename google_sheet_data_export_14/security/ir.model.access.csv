@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_google_spreadsheet_manager_export,manager.google.spreadsheet.export,model_google_spreadsheet_export,google_sheet_data_import.group_Api_manager,1,1,1,1
+access_google_spreadsheet_user_export,user.google.spreadsheet.export,model_google_spreadsheet_export,google_sheet_data_import.group_Api_user,1,0,0,0
+access_google_spreadsheet_all_export,all.read.google.spreadsheet.export,model_google_spreadsheet_export,,1,0,0,0
+access_google_spreadsheet_fields_all_export,all.read.google.spreadsheet.fields.export,model_gsheet_ir_model_field,,1,1,1,1

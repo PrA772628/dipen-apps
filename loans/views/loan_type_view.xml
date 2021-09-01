@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loan-types_view_form" model="ir.ui.view">
+        <field name="name">loan.types.view.form</field>
+        <field name="model">loan.types</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="loan_name" placeholder="Name"/>
+                        </h1>
+                        <h1>
+                            <field name="loan_code" placeholder="Loan Code"/>
+                        </h1>
+                    </div>
+                    <group string='General'>
+                        <group>
+                            <field name="is_interest"/>
+                            <field name="loan_interest_mode"/>
+                            <field name="loan_rate"/>
+                            <field name="loan_interest_account"/>
+                        </group>
+                        <group>
+                            <field name="loan_repayment"/>
+                            <field name="loan_disburse"/>
+                            <field name="company_name"/>
+                        </group>
+                    </group>
+
+                    <group string="Loan Proofs">
+                        <field name="loan_proofs_id" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="loan_types_view_tree" model="ir.ui.view">
+        <field name="name">loan.types.view.tree</field>
+        <field name="model">loan.types</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Add your fields here -->
+                <field name="loan_name"/>
+                <field name="is_interest"/>
+                <field name="loan_interest_mode"/>
+                <field name="loan_rate"/>
+                <field name="loan_repayment"/>
+                <field name="loan_disburse"/>
+                <field name="company_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="loan_types_action" model="ir.actions.act_window">
+        <field name="name">Loan Types</field>
+        <field name="res_model">loan.types</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+                Create Your Loan Types Here
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="Loans_types" name="Loan Types" parent="Loans_configuration" action="loan_types_action" />
+
+</odoo>

@@ -1,6 +1,6 @@
 {
     'name': 'Google Sheet Import API',
-    'version': '13.0.1.1.0',
+    'version': '14.0.1.1.0',
     'category': 'Extra Tools',
     'author' : 'VperfectCS',
     'website' : 'http://vperfectcs.com/',

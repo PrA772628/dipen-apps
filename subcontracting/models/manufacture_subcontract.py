@@ -115,6 +115,7 @@ class StockPickingSubcontract(models.Model):
             if self.move_raw_id:
                 bom = self.env['mrp.bom']._bom_find(product=self.move_raw_id.product_id)
                 picking_type_in = self.env['stock.picking.type'].search([('code', '=', 'incoming')], limit=1)
+                
                 if bom:
                     move_lines = [
                         (0, 0, {
@@ -136,8 +137,6 @@ class StockPickingSubcontract(models.Model):
                         })
 
         return picking
-
-
 
 class StockMoveSubcontract(models.Model):
     _inherit = 'stock.move'

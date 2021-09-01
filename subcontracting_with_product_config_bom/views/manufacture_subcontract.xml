@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="mrp_bom_form_view_inherit" model="ir.ui.view">
+			<field name="name">mrp.bom.form_inherit</field>
+			<field name="model">mrp.bom</field>
+			<field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='type']" position="replace">
+					<field name="type" widget="radio"/>
+					<p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','!=','subcontract')]}">
+						<ul>
+                        This is Odoo's standard feature. Do not use this with Vpcs Subcontracting to avoid confusion.
+						</ul>
+					</p>
+				</xpath>
+
+				<xpath expr="//sheet//notebook//page[last()]" position="after">
+					<page string="Subcontracting">
+						<group>
+							<group col="3">
+								<field name='subcontract'/>
+							</group>
+						</group>
+						<separator string="Configuration" attrs="{'invisible': [('subcontract', '=', False)]}"/>
+						<group attrs="{'invisible': [('subcontract', '=', False)]}">
+							<group>
+								<field name='service_product' domain="[('type', '=', 'service')]" attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+								<field name='cost_per_unit' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+								<field name='partner_id' attrs="{'invisible': [('subcontract', '=', False)], 'required': [('subcontract', '=', True)]}"/>
+							</group>
+							<field name="picking_ids" attrs="{'invisible': [('subcontract', '=', False)]}">
+								<tree editable="bottom">
+									<field name="picking_type" string='Picking Type' required='1'/>
+									<field name="product_id" string='Product' required='1'/>
+									<field name="product_qty" string='Quantity' required='1'/>
+								</tree>
+							</field>
+						</group>
+					</page>
+				</xpath>
+			</field>
+		</record>
+		<record id="mrp_bom_form_view_inherit1" model="ir.ui.view">
+			<field name="name">mrp.bom.form_inherit1</field>
+			<field name="model">mrp.bom</field>
+			<field name="inherit_id" ref="mrp_subcontracting.mrp_bom_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name=('subcontractor_ids')]" position="replace">
+					<field name="subcontractor_ids" widget="many2many_tags"/>
+				</xpath>
+				<xpath expr="//field[@name=('subcontractor_ids')]" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_subcontract_purchase">
+			<field name="context">{}</field>
+			<field name="domain">[('manufacture_id','=', active_id)]</field>
+			<field name="name">Purchases</field>
+			<field name="res_model">purchase.order</field>
+			<field name="view_id" ref="purchase.purchase_order_tree"/>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_subcontract_delivery">
+			<field name="context">{}</field>
+			<field name="domain">[('manufacture_id','=', active_id),('picking_type_code','=', 'outgoing')]</field>
+			<field name="name">Deliveries</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_id" ref="stock.vpicktree"/>
+		</record>
+
+
+		<record model="ir.actions.act_window" id="action_subcontract_receipt">
+			<field name="context">{}</field>
+			<field name="domain">[('manufacture_id','=', active_id),('picking_type_code','=', 'incoming')]</field>
+			<field name="name">Receipts</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_id" ref="stock.vpicktree"/>
+		</record>
+
+		<record id="mrp_production_form_view_inherit" model="ir.ui.view">
+			<field name="name">mrp.production.form.inherit</field>
+			<field name="model">mrp.production</field>
+			<field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//sheet//div[@name='button_box']" position='inside'>
+					<field name='p_subcontract' invisible='True'/>
+					<field name="no_update" invisible="True"/>
+
+					<button type="action" name= "%(subcontracting_with_product_config_bom.action_subcontract_purchase)d" attrs="{'invisible':[('p_subcontract', '!=', True)]}" class="oe_stat_button" icon="fa-shopping-cart">
+						<field string="Subcontracts" name="purchase_count" widget="statinfo"/>
+					</button>
+
+					<button type="action" name= "%(subcontracting_with_product_config_bom.action_subcontract_delivery)d" attrs="{'invisible':[('p_subcontract', '!=', True)]}" class="oe_stat_button" icon="fa-truck">
+						<field string="Raw Materials" name="delivery_raw_count" widget="statinfo"/>
+					</button>
+
+					<button type="action" name= "%(subcontracting_with_product_config_bom.action_subcontract_receipt)d" attrs="{'invisible':[('p_subcontract', '!=', True)]}" class="oe_stat_button" icon="fa-truck">
+						<field string="Receipts" name="receipt_count" widget="statinfo"/>
+					</button>
+				</xpath>
+
+				<xpath expr="//sheet//notebook//page//field[@name='move_raw_ids']/tree/field[@name='product_id']" position='after'>
+					<field name="subcontract_orders" invisible='True'/>
+				</xpath>
+
+				<xpath expr="//button[hasclass('oe_link')]" position="attributes">
+					<attribute name="attrs">{'invisible':['|','|', ('state', 'in', ('done','cancel')), ('id', '=', False), ('no_update', '=', True)]}</attribute>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="mrp_subcontracts" model="ir.actions.act_window">
+			<field name="name">Subcontracting Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.order</field>
+			<field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+			<field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
+			<field name="domain">[('manufacture_id','!=',False)]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+				List of Subcontracting Purchase Orders.
+				</p>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_purchase_order_kanban_inherit">
+			<field name="name">purchase.order.kanban.inherit</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.view_purchase_order_kanban"/>
+			<field name="arch" type="xml">
+				<field name="currency_id" position='after'>
+					<field name="manufacture_id"/>
+				</field>
+				<xpath expr="//templates//t//div//div[hasclass('o_kanban_record_bottom')]" position='after'>
+					<br/>
+					<div>
+						<div t-if="record.manufacture_id">
+							<button name="action_subcontract_manufacture" type="object" attrs="{'invisible':[('manufacture_id', '=', False)]}">
+								<field name="manufacture_id"/>
+							</button>
+						</div>
+					</div>
+				</xpath>
+			</field>
+		</record>
+		<record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.inherit.mrp1</field>
+			<field name="model">res.config.settings</field>
+			<field name="priority" eval="35"/>
+			<field name="inherit_id" ref="mrp.res_config_settings_view_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//div[@data-key='mrp']/div/div[2]" position="replace"/>
+			</field>
+		</record>
+
+		<menuitem id="menu_mrp_subcontracts" action="mrp_subcontracts" name="Subcontracting Orders" parent="mrp.menu_mrp_manufacturing" sequence="10"/>
+	</data>
+</odoo>

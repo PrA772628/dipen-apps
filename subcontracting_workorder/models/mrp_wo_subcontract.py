@@ -29,7 +29,7 @@ class BomSubcontract(models.Model):
     _inherit = 'mrp.routing.workcenter'
 
     subcontract = fields.Boolean()
-    bom_id = fields.Many2one('mrp.bom', string="Bill Of Material")
+    new_bom_id = fields.Many2one('mrp.bom', string="Bill Of Material")
     partner_id = fields.Many2one('res.partner',string='Supplier')
     service_product = fields.Many2one('product.product',string='Product')
     cost_per_unit = fields.Float(string='Cost per unit')
@@ -56,7 +56,7 @@ class BomSubcontract(models.Model):
 class SubcontractWorkOrder(models.Model):
     _inherit = 'mrp.workorder'
 
-    bom_id = fields.Many2one(related='operation_id.bom_id',string='Bill Of Material')
+    bom_id = fields.Many2one(related='operation_id.new_bom_id',string='Bill Of Material')
     subcontract_wo = fields.Boolean(compute='_subcontract_wo')
     purchase_count = fields.Integer(compute='_purchase_count')
     delivery_count = fields.Integer(compute='_delivery_count')
@@ -90,23 +90,27 @@ class SubcontractWorkOrder(models.Model):
 
     @api.depends("operation_id")
     def _subcontract_wo(self):
-        self.ensure_one()
-        if self.name == self.operation_id.name and self.operation_id.subcontract and self.operation_id.show_wo_subcontract:
-            self.subcontract_wo = True
-        else:
-            self.subcontract_wo = False
+        
+        for subcontract in self:
+            
+            if subcontract.name == subcontract.operation_id.name and subcontract.operation_id.subcontract and subcontract.operation_id.show_wo_subcontract:
+                subcontract.subcontract_wo = True
+            else:
+               subcontract.subcontract_wo = False
     
     def btn_start_subcontract(self):
         bom_product = None
         bom_product_qty = 0
         move_raw_id = False
         for order in self:
+           
             order.button_start()
             stock_lines = []
             if order.production_id.state != 'progress':
                 order.production_id.write({'state': 'progress'})
             purchase_order = self.env['purchase.order']
             order_line = self.env['purchase.order.line']
+
 
             po_id = purchase_order.create({
                 'partner_id': order.operation_id.partner_id.id,
@@ -124,7 +128,6 @@ class SubcontractWorkOrder(models.Model):
                 })
 
             picking_type_id = self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1)
-                
             for move in order.production_id.move_raw_ids:
                 if move.product_id.bom_ids.filtered(lambda l:l.id == order.bom_id.id):
                     bom_product = move.product_id
@@ -143,19 +146,18 @@ class SubcontractWorkOrder(models.Model):
                             'subcontract_bom_line_id': bom_line.id
                             }))
 
-            self.env['stock.picking'].create({
-                'partner_id': order.operation_id.partner_id.id,
-                'picking_type_id': picking_type_id.id,
-                'location_id': picking_type_id.default_location_src_id.id,
-                'location_dest_id': order.operation_id.partner_id.property_stock_customer.id,
-                'move_lines': stock_lines,
-                'workorder_id': order.id,
-                'subcontract_product_id': bom_product.id,
-                'subcontract_product_qty': bom_product_qty,
-                'move_raw_id': move_raw_id.id,
-                'manufacture_id': order.production_id.id
-                })
-
+                    self.env['stock.picking'].create({
+                        'partner_id': order.operation_id.partner_id.id,
+                        'picking_type_id': picking_type_id.id,
+                        'location_id': picking_type_id.default_location_src_id.id,
+                        'location_dest_id': order.operation_id.partner_id.property_stock_customer.id,
+                        'move_lines': stock_lines,
+                        'workorder_id': order.id,
+                        'subcontract_product_id': bom_product.id,
+                        'subcontract_product_qty': bom_product_qty,
+                        'move_raw_id': move_raw_id.id,
+                        'manufacture_id': order.production_id.id
+                        })
             # order.write({'state': 'progress'})
 
     def btn_done_subcontract(self):
@@ -183,7 +185,7 @@ class StockPicking(models.Model):
                             'product_id': picking.subcontract_product_id.id,
                             'name': 'Stock Move',
                             'product_uom': picking.subcontract_product_id.uom_id.id,
-                            'product_uom_qty': picking.subcontract_product_qty,
+                            'product_uom_qty': picking.subcontract_product_qty * picking.workorder_id.production_id.product_qty,
                             'location_dest_id': picking_type_id.default_location_dest_id.id,
                             'location_id': picking.workorder_id.operation_id.partner_id.property_stock_supplier.id
                     })
@@ -197,8 +199,14 @@ class StockPicking(models.Model):
                     'workorder_id': picking.workorder_id.id
                     })
 
-    def button_validate(self):
-        super_picking = super(StockPicking, self).button_validate()
+    # def button_validate(self):
+    #     super_picking = super(StockPicking, self).button_validate()
+    #     if self.picking_type_id.code == "outgoing":
+    #         self._validate_subcontracting_picking()
+    #     return super_picking
+
+    def _action_done(self):
+        super_picking = super(StockPicking, self)._action_done()
         if self.picking_type_id.code == "outgoing":
             self._validate_subcontracting_picking()
         return super_picking

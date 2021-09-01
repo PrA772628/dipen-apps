@@ -3,8 +3,8 @@ from odoo import models, fields, api, _
 class ImportDataSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    email = fields.Char('Email')
-    p12_json_key = fields.Binary('Google API JSON key', attachment=True)
+    email = fields.Char(string='Email')
+    p12_json_key = fields.Binary(string='Google API JSON key', attachment=True)
 
     def set_values(self):
         res = super(ImportDataSettings,self).set_values()

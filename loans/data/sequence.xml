@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Sequences for sale.order -->
+        <record id="seq_loan_request" model="ir.sequence">
+            <field name="name">Loan Request Sequence</field>
+            <field name="code">loan.request.sequence</field>
+            <field name="prefix">Loan/2020/</field>
+            <field name="padding">3</field>
+            <!-- <field name="number_next">1</field>
+            <field name="number_increment">1</field> -->
+        </record>
+
+        <record id="seq_loan_installment" model="ir.sequence">
+            <field name="name">Loan Request Sequence</field>
+            <field name="code">loan.installment.sequence</field>
+            <field name="prefix">INS-Loan/2020/</field>
+            <field name="padding">4</field>
+            <!-- <field name="number_next">1</field>
+            <field name="number_increment">1</field> -->
+        </record>
+
+    </data>
+
+</odoo>

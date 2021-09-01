@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loan_policy_view_form" model="ir.ui.view">
+        <field name="name">loan.policy.view.form</field>
+        <field name="model">loan.policy</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="policy_name" placeholder="Name"/>
+                        </h1>
+                        <h1>
+                            <field name="policy_code" placeholder="Policy Code"/>
+                        </h1>
+                    </div>
+                    <group string='General'>
+                        <group>
+                            <field name="policy_type"/>
+                            <field name='policy_basis' attrs="{'invisible': [('policy_type','=', 'gap')]}"/>
+                            <field name="policy_value"/>
+                        </group>
+                        <group>
+                            <field name="company_name"/>
+                            <field name="loan_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="loan_Policy_view_tree" model="ir.ui.view">
+        <field name="name">loan.policy.view.tree</field>
+        <field name="model">loan.policy</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Add your fields here -->
+                <field name="policy_name"/>
+                <field name="policy_code"/>
+                <field name="policy_type"/>
+                <field name="policy_basis"/>
+                <field name="policy_value"/>
+                <field name="company_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="loan_policy_action" model="ir.actions.act_window">
+        <field name="name">Loan Policy</field>
+        <field name="res_model">loan.policy</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+                Create Your Loan Policy Here
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="Loans_policy" name="Loan Policy" parent="Loans_configuration" action="loan_policy_action"/>
+
+</odoo>

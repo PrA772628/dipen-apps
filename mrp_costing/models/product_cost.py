@@ -5,7 +5,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-
 class MrpProductionInherit(models.Model):
     _inherit = 'mrp.production'
 
@@ -50,7 +49,7 @@ class MrpProductionInherit(models.Model):
                     'domain': [('mrp_id', '=', self.id)],
                     'res_model': 'labour.cost.detail',
                     'view_id': False,
-                    'view_mode': 'tree',
+                    'view_mode': 'tree,form',
                     'type': 'ir.actions.act_window',
                 }
             else:
@@ -59,7 +58,7 @@ class MrpProductionInherit(models.Model):
                     'domain': [('product_id', '=', self.product_id.id)],
                     'res_model': 'labour.cost',
                     'view_id': False,
-                    'view_mode': 'tree',
+                    'view_mode': 'tree,form',
                     'type': 'ir.actions.act_window',
                 }
 
@@ -162,9 +161,9 @@ class MrpProductionInherit(models.Model):
                             'date': date,
                             'ref': '%s - Labour'%self.name,
                             'mo_reference':self.id,
-                            'type':'entry',
+                            'move_type':'entry',
                         })
-                        new_account_move.post()
+                        new_account_move._post()
 
             else:
                 for i in self.workorder_ids:
@@ -206,9 +205,9 @@ class MrpProductionInherit(models.Model):
                     'date': date,
                     'ref': 'Labour Cost',
                     'mo_reference':self.id,
-                    'type':'entry',
+                    'move_type':'entry',
                 })
-                new_account_move.post()
+                new_account_move._post()
 
         for rec in overhead_data:
             debit_value = self.company_id.currency_id.round(rec.overhead_cost)
@@ -245,9 +244,9 @@ class MrpProductionInherit(models.Model):
                 'date': date,
                 'ref': 'Overhead Cost',
                 'mo_reference':self.id,
-                'type':'entry',
+                'move_type':'entry',
             })
-            new_account_move.post()
+            new_account_move._post()
 
         acc_move = self.env['account.move'].search([])
 
@@ -264,7 +263,7 @@ class MrpProductionInherit(models.Model):
                     'debit':self.cost_status
                 }))
         final_product_move.write({'line_ids':to_write})
-        final_product_move.post()
+        final_product_move._post() 
 
         try:
             for rec in self:
@@ -275,8 +274,8 @@ class MrpProductionInherit(models.Model):
             raise UserError(_("There are no configuration for product final cost"))
         return res
 
-    def action_cancel(self):
-        res = super(MrpProductionInherit, self).action_cancel()
+    def button_unbuild(self):
+        res = super(MrpProductionInherit, self).button_unbuild()
         acc_move = self.env['account.move'].search([('mo_reference','=',self.id)])
         for i in acc_move:
             i.action_reverse() 
@@ -334,6 +333,12 @@ class OverheadCost(models.Model):
         'account.account', string='Overhead Input Account')
     overhead_output_account = fields.Many2one(
         'account.account', string='Overhead Output Account')
+
+
+    _sql_constraints = [
+        ('workcenter_uniq', 'unique (workcenter_id)',
+         'The workcenter id is uniq for all cost method !')
+    ]
 
     @api.onchange('start_date', 'end_date', 'workcenter_id')
     def mrp_orders(self):
@@ -438,7 +443,6 @@ class LabourCost(models.Model):
          'The product id is uniq for all cost method !')
     ]
 
-
     @api.onchange('start_date', 'end_date', 'product_id')
     def mrp_orders(self):
         for rec in self:
@@ -485,7 +489,7 @@ class LabourCost(models.Model):
                 rec.average_cost = 0
 
 
-class ProductProductInherit(models.Model):  
+class ProductProductInherit(models.Model):
     _inherit = 'product.product'
 
     final_cost = fields.Float(string='Final Cost Based On MO')
@@ -512,7 +516,7 @@ class StockMoveInherit(models.Model):
                 'ref': description,
                 'stock_move_id': self.id,
                 'stock_valuation_layer_ids': [(6, None, [svl_id])],
-                'type': 'entry',
+                'move_type': 'entry',
                 'mo_reference':self.production_id.id or self.raw_material_production_id.id,
             })
-            new_account_move.post()
+            new_account_move._post()

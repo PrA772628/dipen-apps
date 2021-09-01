@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_loan_proof,loan.proof,model_loan_proof,group_Loans_Hr_Manager,1,1,1,1
+access_loan_types,loan.types,model_loan_types,group_Loans_Hr_Manager,1,1,1,1
+access_loan_policy,loan.policy,model_loan_policy,group_Loans_Hr_Manager,1,1,1,1
+access_loan_request,loan.request,model_loan_request,group_Loans_Employee,1,1,1,1
+access_loan_installment_detail,loan.installment.detail,model_loan_installment_detail,group_Loans_Employee,1,1,0,1
+access_loan_types_Employee_user,loan.types Employee user,model_loan_types,group_Loans_Employee,1,0,0,0
+access_loan_reject,loan.request.reject,model_loan_request_reject,group_Loans_Dep_Manager,1,1,1,1
+access_loan_view_request_department,loan.request view department,model_loan_request,group_Loans_Dep_Manager,1,1,0,1
+access_loan_installment_detail_view,loan.installment.detail view department,model_loan_installment_detail,group_Loans_Dep_Manager,1,1,0,1
+access_loan_view_request_hr,loan.request view hr,model_loan_request,group_Loans_Hr_Manager,1,1,0,1
+access_loan_installment_detail_view_hr,loan.installment.detail view hr,model_loan_installment_detail,group_Loans_Hr_Manager,1,1,0,1
+access_loan_reject_hr,loan.request.reject,model_loan_request_reject,group_Loans_Hr_Manager,1,1,1,1
+access_loan_view_request_accountant,loan.request view accountant,model_loan_request,group_Loans_Accountant,1,1,1,1
+access_loan_installment_detail_view_accountant,loan.installment.detail view accountant,model_loan_installment_detail,group_Loans_Accountant,1,1,1,1
+access_loan_proof_req,loan.proof,model_loan_proof,group_Loans_Dep_Manager,1,1,1,1
+access_loan_proof_req1,loan.proof,model_loan_proof,group_Loans_Accountant,1,1,1,1
+access_loan_proof_req2,loan.proof,model_loan_proof,group_Loans_Employee,1,1,1,1

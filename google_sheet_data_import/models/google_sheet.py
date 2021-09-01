@@ -1,8 +1,8 @@
 import base64
 import json
-from datetime import datetime
-from datetime import date
 import gspread
+from datetime import date
+from datetime import datetime
 from httplib2 import ServerNotFoundError
 from gspread.exceptions import NoValidUrlKeyFound, SpreadsheetNotFound
 from oauth2client.service_account import ServiceAccountCredentials
@@ -215,11 +215,10 @@ class GoogleSpreadsheetImport(models.Model):
         document = self.open_document(email, p12_json_key)
         sheet = document.worksheet(self.document_sheet)
         header_row = 1
-        try:
-            row = [c or '' for c in sheet.row_values(header_row)]
-        except Exception as e:
-            raise ValidationError(_('%s\nHeader cells seems empty!'%SHEET_APP))
-
+        row = [c or '' for c in sheet.row_values(header_row)]
+        if not row:
+            raise ValidationError(SHEET_APP, _(
+                'Header cells seems empty!'))
         master_row_field = row[0]
 
         GoogleModel = self.env['ir.model'].search([

@@ -180,10 +180,10 @@ class GoogleSpreadsheetIExport(models.Model):
 
                 for data in get_new_record:
                     for key, value in data.items():
-                        if isinstance(value, datetime.date):
+                        if isinstance(value, datetime.datetime):
                             data.update(
                                 {
-                                    key: pd.to_datetime(value),
+                                    # key: pd.to_datetime(value),
                                     key: value.strftime("%Y-%m-%d %H:%M:%S.%f"),
                                 }
                             )
@@ -208,8 +208,8 @@ class GoogleSpreadsheetIExport(models.Model):
                 if isinstance(value, datetime.date):
                     data.update(
                         {
-                            key: pd.to_datetime(value),
-                            key: value.strftime("%Y-%m-%d %H:%M:%S.%f"),
+                            # key: pd.to_datetime(value),
+                            key: value.strftime("%Y-%m-%d"),
                         }
                     )
 

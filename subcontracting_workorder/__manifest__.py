@@ -5,7 +5,7 @@
     'author': "VperfectCS",
     'maintainer': 'VperfectCS',
     'website': "http://www.vperfectcs.com",
-    'version': '13.0.0.2',
+    'version': '14.0.2.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['mrp','purchase','sale_management','subcontracting'],

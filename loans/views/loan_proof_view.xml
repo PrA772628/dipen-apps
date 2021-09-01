@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- loan.proof form view -->
+    <record id="loan_prof_view_form" model="ir.ui.view">
+        <field name="name">loan.proof.view.form</field>
+        <field name="model">loan.proof</field>
+        <field name="arch" type="xml">
+            <form string="Loan Proof">
+                <sheet>
+                    <group>
+                        <group>
+                            <!-- Add your fields here -->
+                            <field name="proof_name"/>
+                            <field name="mandatory" widget="checkbox"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- loan.proof tree view -->
+    <record id="loan_proof_view_tree" model="ir.ui.view">
+        <field name="name">loan.proof.view.tree</field>
+        <field name="model">loan.proof</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Add your fields here -->
+                <field name="proof_name"/>
+                <field name="mandatory"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="loan_proof_action" model="ir.actions.act_window">
+        <field name="name">Loan Proof</field>
+        <field name="res_model">loan.proof</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                create your first Loan Proof record !!
+            </p>
+        </field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem id="Loans_root" name="Loans" sequence="100"/>
+
+    <menuitem id="Loans_configuration" name="Configuration" parent="Loans_root" groups="group_Loans_Hr_Manager"/>
+
+    <menuitem id="Loans_proof" name="Loan Proofs" parent="Loans_configuration" action="loan_proof_action"/>
+
+
+</odoo>

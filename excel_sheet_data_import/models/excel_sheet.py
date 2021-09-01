@@ -17,7 +17,6 @@ _logger = logging.getLogger(__name__)
 TYPE_LISTS = ['integer', 'float', 'char',
     'text', 'date', 'datetime', 'boolean']
 
-
 class ExcelSpreadsheetImport(models.Model):
     _name = 'excel.spreadsheet.import'
     _description = 'Excel Spreadsheet Import'

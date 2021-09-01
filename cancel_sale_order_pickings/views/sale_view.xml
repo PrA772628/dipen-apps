@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<record id="view_order_form_new_step_inherit_cancel" model="ir.ui.view">
+	    <field name="name">sale.order.new.step.form.cancel.view</field>
+	    <field name="model">sale.order</field>
+	    <field name="inherit_id" ref="sale.view_order_form"/>
+	    <field name="arch" type="xml">
+	    	<button name="action_cancel" position="attributes">
+	    		<attribute name="states" separator="," add="cancel_shipment"/>
+	    	</button>
+	    	<xpath expr="//button[@name='action_cancel']" position="attributes">
+	    		<attribute name="invisible">True</attribute>
+	    	</xpath>
+	    	<xpath expr="//button[@name='action_cancel']" position="after">
+	    		<button name="action_cancel_forced" states="draft,sent,sale" string="Cancel" type="object" confirm="This will revert Done picking also. Are you still want to cancel?"/>
+	    	</xpath>
+	    	<button name="action_draft" position="attributes">
+	    		<attribute name="states" separator="," add="cancel_shipment"/>
+	    	</button>
+	    </field>
+	</record>
+</odoo>

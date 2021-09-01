@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="loan_reject_reason_view_form" model="ir.ui.view">
+        <field name="name">loan.request.reject.form</field>
+        <field name="model">loan.request.reject</field>
+        <field name="arch" type="xml">
+            <form string="Reject Reason">
+                <group class="oe_title">
+                    <field name="reject_reason"/>
+                </group>
+                <footer>
+                    <button name="action_reject_reason_apply" string="Submit" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="loan_reject_reason_action" model="ir.actions.act_window">
+        <field name="name">Reject Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">loan.request.reject</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="loan_reject_reason_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- res.config.settings form view -->
+   <!-- res.config.settings form view -->
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form</field>
         <field name="model">res.config.settings</field>
@@ -83,20 +83,20 @@
         </field>
     </record>
 
-<!-- model.name action window -->
-<record id="action_google_spreadsheet_config" model="ir.actions.act_window">
-    <field name="name">Google Sheet Settings</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">res.config.settings</field>
-    <field name="view_mode">form</field>
-    <field name="view_id" ref ="res_config_settings_view_form"/>
-    <field name="target">inline</field>
-    <field name="context">{'module' : 'google_sheet_data_import'}</field>
-</record>
+    <!-- model.name action window -->
+    <record id="action_google_spreadsheet_config" model="ir.actions.act_window">
+        <field name="name">Google Sheet Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref ="res_config_settings_view_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'google_sheet_data_import'}</field>
+    </record>
 
-<menuitem id="menu_import_data_configuration" name="Configuration" parent="menu_google_sheet" 
+    <menuitem id="menu_import_data_configuration" name="Configuration" parent="menu_google_sheet" 
         sequence = '100' />
 
-<menuitem id="menu_import_data_setting" name="Setting" parent="menu_import_data_configuration"
+    <menuitem id="menu_import_data_setting" name="Setting" parent="menu_import_data_configuration"
         sequence = '10' action="action_google_spreadsheet_config" />
 </odoo>

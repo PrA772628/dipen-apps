@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_category_update_wizard" model="ir.ui.view">
+        <field name="name">Change Internal Catogory</field>
+        <field name="model">product.category.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change Internal Catogory">
+                <p class="oe_grey">
+                    The all selected product's internal category will be update with this Internal category.
+                </p>
+                <group>
+                    <field name="product_ids" string="Products Name" widget="many2many_tag">
+                        <tree editable="top">
+                            <field name="name"/>
+                            <field name="categ_id"/>
+                        </tree>
+                    </field>
+                    <group cols="4">
+                        <field name="all_categ"/>
+                        <field name="internal_category_id" string="Internal Category" attrs="{'required':[('all_categ','=',True)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="update_category" string="Update Category" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="update_product_category" model="ir.actions.act_window">
+        <field name="name">Change Internal Category</field>
+        <field name="res_model">product.category.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_category_update_wizard"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_template" />
+    </record>
+
+</odoo>

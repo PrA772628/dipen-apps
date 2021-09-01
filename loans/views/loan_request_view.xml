@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- /Users/dipen/Workplace -->
+    <!-- loan.request form view -->
+    <record id="loan_request_view_form" model="ir.ui.view">
+        <field name="name">loan.request.view.form</field>
+        <field name="model">loan.request</field>
+        <field name="arch" type="xml">
+            <form string="Loan Request" create="false">
+                <header>
+                    <button name="action_compute_installment" type="object" class="oe_highlight" string="Compute" groups="loans.group_Loans_Accountant"/>
+                    <button name="action_submit" type="object" class="oe_highlight" string="Submit Request" attrs="{'invisible': [('states','not in','draft')]}"/>
+                    <button name="action_approve_request" type="object" class="oe_highlight" string="Approve Request" attrs='{"invisible":[("states","not in","submit")]}' groups="loans.group_Loans_Dep_Manager"/>
+                    <button name="%(loans.loan_reject_reason_action)d" type="action" class="oe_highlight" string="Reject Request" attrs="{'invisible': [('states','not in','submit')]}" groups="loans.group_Loans_Dep_Manager"/>
+                    <button name="action_hr_approve_request" type="object" class="oe_highlight" string="Approve Loan" attrs='{"invisible":[("states","not in","department")]}' groups="loans.group_Loans_Hr_Manager"/>
+                    <button name="%(loans.loan_reject_reason_action)d" type="action" class="oe_highlight" string="Reject Loan" attrs="{'invisible': [('states','not in','department')]}" groups="loans.group_Loans_Hr_Manager"/>
+                    <!-- <button name="action_create_invoice" type="object" class="oe_highlight" string="Create invoice" groups="loans.group_Loans_Accountant"/> -->
+                    <button name="action_disburse_loan" type="object" class="oe_highlight" string="Disburse Loan" groups="loans.group_Loans_Accountant"/>
+                    <field name="states" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="loan_partner_type" widget='radio' class="oe_edit_only" options="{'horizontal': true}"/>
+                    <div class="oe_title">
+                        <h2>
+                            <field name="customer_id" attrs="{'invisible':[('loan_partner_type','=','employee')]}"/>
+                        </h2>
+                        <h1>
+                            <field name="name_seq"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                            <field name="job_position" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                            <field name="department_id" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                            <field name="apply_date"/>
+                            <field name="loan_type" attrs="{'invisible':[('loan_partner_type','=','employee')]}"/>
+                        </group>
+                        <group>
+                            <field name="approve_date"/>
+                            <field name="company_name"/>
+                            <field name="department_manager_id" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                            <field name="disburse_date" groups="loans.group_Loans_Accountant"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="loan_amount"/>
+                            <field name="loan_term"/>
+                            <field name="interest_amount"/>
+                            <field name="paid_amount"/>
+                            <field name="total_amount"/>
+                        </group>
+                        <group>
+                            <field name="loan_type" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                            <field name="interest_mode"/>
+                            <field name="interest_rate"/>
+                            <field name="installment_type"/>
+                            <field name="loan_disburse_date"/>
+                            <!-- <field name="loan_end_date"/> -->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Installments">
+                            <field name="installment_lines">
+                                <tree>
+                                    <field name="loan_request_id" invisible='1'/>
+                                    <field name="installment_seq"/>
+                                    <field name="from_date"/>
+                                    <field name="to_date"/>
+                                    <field name="principal_amount" avg="Average of amount"/>
+                                    <field name="installment_amount" sum="Sum of installment amount"/>
+                                    <field name="installment_interest_amount" sum ="sum of interest amount"/>
+                                    <field name="emi_amount" sum="sum of emi"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Proofs">
+                            <group>
+                                <field name="req_proof" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="image1" widget="image" class="media-object" width='250'/>
+                                </group>
+                                <group>
+                                    <field name="image2" widget="image" class="media-object" width='250'/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="image3" widget="image" class="media-object" width='250'/>
+                                </group>
+                                <group>
+                                    <field name="image4" widget="image" class="media-object" width='250'/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="image5" widget="image" class="media-object" width='250'/>
+                                </group>
+                                <group>
+                                    <field name="image6" widget="image" class="media-object" width='250'/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Accounting" groups="loans.group_Loans_Accountant">
+                            <group>
+                                <group>
+                                    <field name="disburse_journal_id" groups="loans.group_Loans_Accountant"/>
+                                    <field name="default_disburse_acnt" groups="loans.group_Loans_Accountant" />
+                                    <field name="loan_repayment_id" groups="loans.group_Loans_Accountant" />
+                                    <field name="borrower_account" groups="loans.group_Loans_Accountant" />
+                                </group>
+                                <group>
+                                    <field name="interest_journal_id" groups="loans.group_Loans_Accountant" />
+                                    <field name="interest_account" groups="loans.group_Loans_Accountant" />
+                                    <field name="interest_receivable_account" groups="loans.group_Loans_Accountant" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Loan Status">
+                            <field name="status"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- loan.request tree view -->
+    <record id="loan_request_view_tree" model="ir.ui.view">
+        <field name="name">loan.request.view.tree</field>
+        <field name="model">loan.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Add your fields here -->
+                <field name="name_seq"/>
+                <field name="loan_partner_type"/>
+                <field name="customer_id" attrs="{'invisible':[('loan_partner_type','=','employee')]}"/>
+                <field name="employee_id" attrs="{'invisible':[('loan_partner_type','=','customer')]}"/>
+                <field name="loan_type"/>
+                <field name="loan_amount"/>
+                <field name="interest_rate"/>
+                <field name="interest_amount"/>
+                <field name="total_amount"/>
+                <field name="paid_amount"/>
+                <field name="states"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- loan.installment.detail form view -->
+    <record id="loan_installment_view_form" model="ir.ui.view">
+        <field name="name">Loan.Installment.form</field>
+        <field name="model">loan.installment.detail</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <header>
+                    <button name="action_installment_pay" type="object" string="Pay" class="oe_highlight" groups="loans.group_Loans_Accountant" attrs="{'invisible': [('state','not in','confirm')]}"/>
+                    <button name="action_installment_confirm" type="object" string="Confirm" class="oe_highlight" groups="loans.group_Loans_Accountant" attrs="{'invisible': [('state','not in','unpaid')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="installment_seq"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_name"/>
+                        </group>
+                        <group>
+                            <field name="loan_type"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail">
+                            <group>
+                                <group>
+                                    <!-- Add your fields here -->
+                                    <field name="loan_seq"/>
+                                    <field name="principal_amount"/>
+                                    <field name="installment_amount"/>
+                                    <field name="installment_interest_amount"/>
+                                </group>
+                                <group>
+                                    <field name="from_date"/>
+                                    <field name="to_date"/>
+                                    <field name="emi_amount"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- loan.installment.detail tree view -->
+    <record id="loan_installment_view_tree" model="ir.ui.view">
+        <field name="name">Loan.installment.tree</field>
+        <field name="model">loan.installment.detail</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <!-- Add your fields here -->
+                <field name="installment_seq"/>
+                <field name="loan_seq"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="principal_amount"/>
+                <field name="installment_amount"/>
+                <field name="installment_interest_amount"/>
+                <field name="emi_amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- loan.request action window -->
+    <record id="customer_loan_request_action" model="ir.actions.act_window">
+        <field name="name">Loan Request</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+                Create Your Loan Request
+            </p>
+        </field>
+    </record>
+
+    <!--customer loan.installment.detail view action window -->
+    <record id="customer_loan_installment_action" model="ir.actions.act_window">
+        <field name="name">Confirm Installments</field>
+        <field name="res_model">loan.installment.detail</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('customer_id','=',uid)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!--department loan.request action window-->
+    <record id="department_view_request_action" model="ir.actions.act_window">
+        <field name="name">Customer Request</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('states','=','submit')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!--department loan approve view action window-->
+    <record id="department_approve_request_action" model="ir.actions.act_window">
+        <field name="name">Approve Requests</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('states','=','department')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!--hr loan.request action window-->
+    <record id="hr_view_request_action" model="ir.actions.act_window">
+        <field name="name">Loan Requests</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('states','=','department')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!--hr loan approve action window-->
+    <record id="hr_approve_request_action" model="ir.actions.act_window">
+        <field name="name">Approve Requests</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|',('states','=','hr'),('states','=','done')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!--accountant loan.request action window -->
+    <record id="accountant_action" model="ir.actions.act_window">
+        <field name="name">Approved Request</field>
+        <field name="res_model">loan.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|',('states','=','hr'),('states','=','done')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <!-- accountant loan installment view action window -->
+    <record id="customers_loan_installment_action" model="ir.actions.act_window">
+        <field name="name">Confirmed Loan Installments</field>
+        <field name="res_model">loan.installment.detail</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','unpaid')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="Loans_Loan" name="Loan" parent="Loans_root" sequence='1'/>
+
+    <!--customer loan request menu-->
+    <menuitem id="Loans_request" name="Loan Request" parent="Loans_Loan" action="customer_loan_request_action" groups="loans.group_Loans_Employee"/>
+
+    <!-- <menuitem id="Loans_skip_installments" name="Skip Installments" parent="Loans_Loan" action="customer_loan_skip_installments_action" groups="loans.group_Loans_Employee"/> -->
+
+    <!--customer loan installment view menu-->
+    <menuitem id="Loans_installment" name="Loan installments" parent="Loans_Loan" action="customer_loan_installment_action" groups="loans.group_Loans_Employee"/>
+
+    <!--department loan request view menu-->
+    <menuitem id="customer_request" name="Customer Request" parent="Loans_Loan" action="department_view_request_action" groups="loans.group_Loans_Dep_Manager"/>
+
+    <!--department loan request approve view menu-->
+    <menuitem id="customer_approve_request" name="Approve Request" parent="Loans_Loan" action="department_approve_request_action" groups="loans.group_Loans_Dep_Manager"/>
+
+    <!--hr loan request view menu-->
+    <menuitem id="department_request" name="Loan Requests" parent="Loans_Loan" action="hr_view_request_action" groups="loans.group_Loans_Hr_Manager"/>
+
+    <!--hr loan request approve view menu-->
+    <menuitem id="approve_request" name="Loan Requests To Approve" parent="Loans_Loan" action="hr_approve_request_action" groups="loans.group_Loans_Hr_Manager"/>
+
+    <!--accountant loan request approve view menu-->
+    <menuitem id="hr_approve_request" name="Approved request" parent="Loans_Loan" action="accountant_action" groups="loans.group_Loans_Accountant"/>
+
+    <!--accountant loan installment view menu-->
+    <menuitem id="customer_Loans_installment" name="Loan installments" parent="Loans_Loan" action="customers_loan_installment_action" groups="loans.group_Loans_Accountant"/>
+
+</odoo>

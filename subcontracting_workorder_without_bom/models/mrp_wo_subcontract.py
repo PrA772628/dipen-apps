@@ -41,11 +41,11 @@ class SubcontractWorkOrder(models.Model):
     @api.depends("operation_id")
     def _subcontract_wo(self):
         result = super(SubcontractWorkOrder, self)._subcontract_wo()
-
-        if self.name == self.operation_id.name and self.operation_id.subcontract and self.operation_id.show_wo_subcontract and self.operation_id.subcontract_without_bom:            
-            self.is_subcontract_without_bom = True
-        else:
-            self.is_subcontract_without_bom = False
+        for rec in self:
+            if rec.name == rec.operation_id.name and rec.operation_id.subcontract and rec.operation_id.show_wo_subcontract and rec.operation_id.subcontract_without_bom:            
+                rec.is_subcontract_without_bom = True
+            else:
+                rec.is_subcontract_without_bom = False
         return result
 
     def btn_start_subcontract(self):
@@ -143,11 +143,11 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
 
-    def _validate_subcontracting_picking(self):
+    def _validate_subcontracting_picking1(self):
         picking_type_id = self.env['stock.picking.type'].search([('code', '=', 'incoming')], limit=1)
         for picking in self:
             if picking.workorder_id and not picking.subcontract_product_id:
-                if picking.workorder_id.operation_id and picking.workorder_id.operation_id.subcontract_without_bom and picking.workorder_id.operation_id.picking_ids.filtered(lambda l:l.picking_type == 'in'):    
+                if picking.workorder_id.operation_id and picking.workorder_id.operation_id.subcontract_without_bom and picking.workorder_id.operation_id.picking_ids.filtered(lambda l:l.picking_type == 'in'):
                     move_line = []
                     for rec in picking.workorder_id.operation_id.picking_ids.filtered(lambda l: l.picking_type == 'in'):
                         move_line += [
@@ -161,7 +161,7 @@ class StockPicking(models.Model):
                             })
                         ]
 
-                    move_line and self.env['stock.picking'].create({
+                        self.env['stock.picking'].create({
                         'partner_id': picking.workorder_id.operation_id.partner_id.id,
                         'picking_type_id': picking_type_id.id,
                         'location_id': picking.workorder_id.operation_id.partner_id.property_stock_supplier.id,
@@ -169,6 +169,7 @@ class StockPicking(models.Model):
                         'move_lines': move_line,
                         'workorder_id': picking.workorder_id.id
                         })
+
                 elif picking.workorder_id and picking.subcontract_product_id and picking.workorder_id.operation_id.subcontract and not picking.workorder_id.operation_id.subcontract_without_bom:
                     move_line = [
                         (0, 0, {
