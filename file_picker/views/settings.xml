@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- res.config.settings form view -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref = "website.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_selection_settings']" position="after">
+                <h2>File Picker Configuration</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label"></span>
+                            <span class="o_form_label">Google Drive</span>
+                            <div class="row mt16">
+                                <label for="drive_api_key" string="API Key" class="col-lg-4 o_light_label"/>
+                                <field name="drive_api_key" class="oe_inline"/>
+                                <label for="drive_client_id" string="Client Id" class="col-lg-4 o_light_label"/>
+                                <field name="drive_client_id" class="oe_inline"/>
+                                <label for="project_id" string="Project Id" class="col-lg-4 o_light_label"/>
+                                <field name="project_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">DropBox</span>
+                            <div class="row mt16">
+                                <label for="dropbox_api_key" string="API Key" class="col-lg-4 o_light_label"/>
+                                <field name="dropbox_api_key" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">OneDrive</span>
+                            <div class="row mt16">
+                                <label for="onedrive_app_id" string="Application Id" class="col-lg-4 o_light_label"/>
+                                <field name="onedrive_app_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

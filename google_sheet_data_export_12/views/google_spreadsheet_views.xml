@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_google_spreadsheet_export_form" model="ir.ui.view">
+        <field name="model">google.spreadsheet.export</field>
+        <field name="arch" type="xml">
+            <form string="Google Sheet Export">
+                <header>
+                    <button name="run_single_sheet" type="object" class="oe_highlight" string="Export Data"/>
+                </header>
+                <group string="Google Sheet Info">
+                    <group>
+                        <field name="name"/>
+                        <field name="select" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="spreadsheet_name" attrs="{'invisible':['|',('select','=','worksheet'),('select','=','update')]}"/>
+                        <field name="worksheet_name"/>
+                        <field name="document_url" attrs="{'invisible':[('select','=','sheet')]}" widget="url"/>
+                    </group>
+                </group>
+                <group string="Odoo Data Selection">
+                    <group>
+                        <field name="ir_model_id"/>
+                        <field name="domain" widget="domain" 
+                            options="{'model':'ir_model_id','field':'ir_model_field'}">
+                        </field>
+                    </group>
+                    <group>
+                         <field name="ir_model_fields" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="g_id" invisible="1"/>
+                                <field name="ir_model_id" invisible="1"/>
+                                <field name="ir_model_field" options="{'no_create': True}"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_google_spreadsheet_backend_tree" model="ir.ui.view">
+        <field name="model">google.spreadsheet.export</field>
+        <field name="arch" type="xml">
+            <tree string="Google Sheet Export">
+                <field name="name"/>
+                <field name="worksheet_name"/>
+                <field name="ir_model_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_google_spreadsheet_export" model="ir.actions.act_window">
+        <field name="name">Google Sheet Export</field>
+        <field name="res_model">google.spreadsheet.export</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_google_spreadsheet_backend_tree"/>
+    </record>
+
+    <menuitem id="menu_google_spreadsheet_backend" name="Export" parent="google_sheet_data_import.menu_google_spreadsheet_import" action="action_google_spreadsheet_export" />
+</odoo>

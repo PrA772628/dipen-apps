@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.cron" id="googlesheet_export_cron">
+        <field name="name">Export data to googlesheet</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_google_spreadsheet_export"/>
+        <field name="code">model.run()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

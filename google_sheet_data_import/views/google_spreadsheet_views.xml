@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_google_spreadsheet_import_form" model="ir.ui.view">
+        <field name="model">google.spreadsheet.import</field>
+        <field name="arch" type="xml">
+            <form string="Google Sheet Import">
+                <header>
+                    <button name="run_single_record" type="object" class="oe_highlight" string="Sync Data Now"/>
+                </header>
+                <group string="Google Sheet Import">
+                    <group>
+                        <field name="name"/>
+                        <field name="document_sheet"/>
+                    </group>
+                    <group>
+                        <field name="document_url" widget="url"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_model_form_view_inherit" model="ir.ui.view">
+        <field name="name">ir.model.form_inherit</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='modules']" position="after">
+                <field name="change_data" groups="google_sheet_data_import.group_Api_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_google_spreadsheet_backend_tree" model="ir.ui.view">
+        <field name="model">google.spreadsheet.import</field>
+        <field name="arch" type="xml">
+            <tree string="Google Sheet Import">
+                <field name="name"/>
+                <field name="document_sheet"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_google_spreadsheet_import" model="ir.actions.act_window">
+        <field name="name">Google Sheet Import</field>
+        <field name="res_model">google.spreadsheet.import</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_google_spreadsheet_backend_tree"/>
+    </record>
+
+    <menuitem id="menu_google_sheet" name="Google Sheet" sequence="100" groups="google_sheet_data_import.group_Api_user"/>
+    <menuitem id="menu_google_spreadsheet_import" name="Google Sheet" parent="menu_google_sheet" sequence="10"/>
+    <menuitem id="menu_google_spreadsheet_backend" name="Import" parent="menu_google_spreadsheet_import" action="action_google_spreadsheet_import" />
+</odoo>

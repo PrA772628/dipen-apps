@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_excel_spreadsheet_import_form" model="ir.ui.view">
+        <field name="model">excel.spreadsheet.import</field>
+        <field name="arch" type="xml">
+            <form string="Excel Spreadsheet Import">
+                <header>
+                    <button name="run_single_record" type="object" class="oe_highlight" string="Sync Data Now"/>
+                </header>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" class="oe_inline"/></h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="document_sheet"/>
+                        <label for="domain_selection"/>
+                        <div class="o_row">
+                            <strong class="oe_inline">First &amp;#160;</strong>
+                            <field name="domain_selection" class="oe_inline" options="{'horizontal': true}" widget="radio"/>
+                        </div>  
+                    </group>
+                    <group>
+                        <field name="operation" widget="radio" options="{'horizontal':true}"/>
+                        <field name="option" widget="radio" options="{'horizontal': true}"/>
+                        <field widget="binary" height="64" name="file_select" filename="file_fname" required="1"/>
+                        <field name="file_fname" invisible="1" />
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_model_form_view_inherit" model="ir.ui.view">
+        <field name="name">ir.model.form_inherit</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='modules']" position="after">
+                <field name="change_data" groups="excel_sheet_data_import.group_Api_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_excel_spreadsheet_backend_tree" model="ir.ui.view">
+        <field name="model">excel.spreadsheet.import</field>
+        <field name="arch" type="xml">
+            <tree string="Excel Spreadsheet Import">
+                <field name="name"/>
+                <field name="document_sheet"/>
+                <field name="operation"/>
+                <field name="option"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_excel_spreadsheet_import" model="ir.actions.act_window">
+        <field name="name">Sheet Import</field>
+        <field name="res_model">excel.spreadsheet.import</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_excel_spreadsheet_backend_tree"/>
+    </record>
+
+    <menuitem id="menu_excel_sheet" name="Excel Sheet" sequence="100" groups="excel_sheet_data_import.group_Api_user"/>
+    <menuitem id="menu_excel_spreadsheet_import" name="Sheet" parent="menu_excel_sheet" sequence="10"/>
+    <menuitem id="menu_excel_spreadsheet_backend" name="Sheet Import" parent="menu_excel_spreadsheet_import" action="action_excel_spreadsheet_import" />
+</odoo>

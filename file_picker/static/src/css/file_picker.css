@@ -1,0 +1,177 @@
+/* --------------------------------------------------------------------------------------------------
+                                device file upload css
+-------------------------------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap');
+.drive-area{
+  border: 1px dashed rgb(209, 208, 208);
+  height: 485px;
+  width: 715px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #eee;
+  text-align: center;
+}
+.drive-area.active{
+  border: 2px solid #eee;
+}
+
+.uploadFileModal {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.tab-content {
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.drive-title{
+  font-size: 26px;
+  font-weight: 400;
+  color: rgb(5, 5, 5);
+}
+
+.title-space{
+  margin-bottom:20px;
+}
+
+.title-subheader{
+  color: #929292;
+  line-height: 20px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.Cloud-name{
+  font-size: 13px;
+}
+
+.img{
+  height:42px;
+}
+
+.btn-drive {
+  display: inline-block;
+  font-family: Roboto-regular, Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 30px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  outline: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.2s cubic-bezier(0.84, 0.02, 0.37, 0.74);
+  transition: all 0.2s cubic-bezier(0.84, 0.02, 0.37, 0.74);
+}
+
+.url-source-input {
+  font-size: 13px;
+  font-family: 'Roboto Condensed', sans-serif;
+  height: 40px;
+  padding: 0px 48px 0px 10px;
+  border-radius: 3px;
+  border: 1px solid #cacaca;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  width: 80%;
+}
+
+input {
+  text-indent: 5px !important;
+}
+.btn-url-source{
+  display: inline-block;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  height: 40px;
+  line-height: 38px;
+  padding: 0 30px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  outline: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.2s cubic-bezier(0.84, 0.02, 0.37, 0.74);
+  transition: all 0.2s cubic-bezier(0.84, 0.02, 0.37, 0.74);
+}
+
+.modal-body{
+  overflow-y: auto;
+}
+
+.modal-dialog{
+  height:100%;
+  max-width:750px;
+}
+
+.modal-content{
+  height:90%;
+}
+.file-upload-header{
+  height:8.8%;
+  border-bottom:0;
+}
+
+.btn-upload-click{
+  margin-top:10%;
+  margin-bottom:10%;
+  margin-left:45%;
+}
+
+.modal-footer{
+  height:8%;
+}
+
+.file-upload-header{
+  height:8%;
+}
+
+h5.modal-title{
+  margin-left: 43%;
+  font-family:'Roboto Condensed', sans-serif;
+  height: 20px;
+  font-size: 20px;
+}
+
+.ShowFiles{
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.device-area{
+  border: 1px dashed rgb(209, 208, 208);
+  height: 485px;
+  width: 715px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #eee;
+  text-align: center;
+}
+
+.fa-cloud-upload{
+  color: #00A09D;
+}
+
+.device-title{
+  font-size: 26px;
+  font-weight: 400;
+  color: rgb(5, 5, 5);
+}
